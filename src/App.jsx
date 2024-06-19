@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  // lista de todos
+  const [todos, setTodos] = useState([]);
+  const [text, setText] = useState("");
+
+  function addTodo() {
+    setTodos([...todos, text]);
+    setText(""); //limpia el input
+  }
+  function dentroSubmit(event) {
+    event.preventDefault();
+    addTodo(); // se puede quitar el onClick porque el onsubmit lo va a ejecutar
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <main className="w-full min-h-screen">
+      <form
+        className="flex flex-row gap-2 justify-center p-5"
+        onSubmit={dentroSubmit}
+      >
+        <input
+          type="text"
+          className="p-2 rounded text-black w-full max-w-screen-sm"
+          placeholder="Escribe tu tarea"
+          value={text}
+          onChange={(event) => setText(event.target.value)}
+        />
+        <button
+          className="bg-white text-black px-3 rounded" /* onClick={addTodo} se quita porque ahora con el submit se pone*/
+        >
+          + Agregar
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+      </form>
+      <div className="text-white">
+        {todos.map((todo, index) => {
+          return <div key={`todo-${index}`}>{todo}</div>;
+        })}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </main>
+  );
 }
-
-export default App
