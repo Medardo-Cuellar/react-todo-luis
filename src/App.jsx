@@ -12,6 +12,7 @@ export default function App() {
   function alEnviar(event) {
     event.preventDefault();
     addTodo(); // se puede quitar el onClick porque el onsubmit lo va a ejecutar
+    saveToLocalStorage();
   }
 
   function removeTodo(indexToRemove) {
@@ -20,6 +21,7 @@ export default function App() {
     setTodos([...todos]); */
     const newTodos = todos.filter((todo, index) => index !== indexToRemove);
     setTodos(newTodos);
+    saveToLocalStorage();
   }
 
   function editTodo(index) {
@@ -32,8 +34,19 @@ export default function App() {
     setTodos(newTodos);
   }
 
+  function saveToLocalStorage() {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }
+
+  function retrieveFromLocalStorage() {
+    const todos = localStorage.getItem("todos");
+    if (todos) {
+      setTodos(JSON.parse(todos));
+    }
+  }
+
   return (
-    <main className="w-full min-h-screen">
+    <main className="w-full mt-10 min-h-screen">
       <form
         className="flex flex-row gap-2 justify-center p-5"
         onSubmit={alEnviar}
@@ -65,12 +78,12 @@ export default function App() {
               className="bg-white/10 rounded p-4 m-4 flex flex-row gap-4 justify-between"
             >
               <span className="flex-grow p-4">{todo}</span>
-              <span
+              {/*               <span
                 className="cursor-pointer p-4 hover:rounded-full hover:bg-green-500/50"
                 onClick={() => editTodo(index)}
               >
                 📝
-              </span>
+              </span> */}
               <span
                 className="cursor-pointer p-4 hover:rounded-full hover:bg-red-500/50"
                 onClick={() => removeTodo(index)}
