@@ -11,12 +11,13 @@ export default function App() {
   }
   function alEnviar(event) {
     event.preventDefault();
-    addTodo(); // se puede quitar el onClick porque el onsubmit lo va a ejecutar
     saveToLocalStorage();
+    addTodo(); // se puede quitar el onClick porque el onsubmit lo va a ejecutar
   }
 
   function removeTodo(indexToRemove) {
     /*     
+    
     todos.splice(indexToRemove, 1);
     setTodos([...todos]); */
     const newTodos = todos.filter((todo, index) => index !== indexToRemove);
