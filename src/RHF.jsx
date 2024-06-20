@@ -4,18 +4,12 @@ import { useForm } from "react-hook-form";
 export default function RHF() {
   // lista de todos
   const [todos, setTodos] = useState([]);
-  const [text, setText] = useState("");
 
   const { register, handleSubmit } = useForm();
 
-  function addTodo() {
-    setTodos([...todos, text]);
-    setText(""); //limpia el input
-  }
-  function alEnviar(event) {
-    event.preventDefault();
-    saveToLocalStorage();
-    addTodo(); // se puede quitar el onClick porque el onsubmit lo va a ejecutar
+
+  function onSubmit(data) {
+    setTodos([...todos, data.todo]);
   }
 
   function removeTodo(indexToRemove) {
@@ -49,6 +43,8 @@ export default function RHF() {
     }
   }
 
+// ya le decimos a react-hook-form que se encargue de la validación
+
   return (
     <main className="w-full mt-10 min-h-screen">
       <h1 className="text-center w-full bg-teal-600 text-black font-bold p-2 rounded">
@@ -56,15 +52,18 @@ export default function RHF() {
       </h1>
       <form
         className="flex flex-row gap-2 justify-center p-5"
-        onSubmit={alEnviar}
+        onSubmit={handleSubmit(onSubmit)}
       >
         <input
           type="text"
           className="p-2 rounded text-black w-full max-w-screen-sm"
           placeholder="Escribe tu tarea"
-          value={text}
-          onChange={(event) => setText(event.target.value)}
           required
+          {...register("todo", {
+            required: true,
+            minLength: 3,
+            maxLength: 180,
+          })}
         />
         <button
           className="bg-white text-black px-3 rounded" /* onClick={addTodo} se quita porque ahora con el submit se pone*/
