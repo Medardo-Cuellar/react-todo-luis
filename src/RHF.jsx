@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -5,8 +6,11 @@ export default function RHF() {
   // lista de todos
   const [todos, setTodos] = useState([]);
 
-  const { register, handleSubmit } = useForm();
-
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid, isSubmitted }, //los is son para validar el formulario son propiedades que nos da react-hook-form y son booleanos
+  } = useForm();
 
   function onSubmit(data) {
     setTodos([...todos, data.todo]);
@@ -43,7 +47,7 @@ export default function RHF() {
     }
   }
 
-// ya le decimos a react-hook-form que se encargue de la validación
+  // ya le decimos a react-hook-form que se encargue de la validación
 
   return (
     <main className="w-full mt-10 min-h-screen">
@@ -56,21 +60,39 @@ export default function RHF() {
       >
         <input
           type="text"
-          className="p-2 rounded text-black w-full max-w-screen-sm"
+          className={clsx("p-2 rounded text-black w-full max-w-screen-sm", {
+            "border-2 border-red-500 bg-red-300": errors.todo,
+          })}
           placeholder="Escribe tu tarea"
           required
           {...register("todo", {
-            required: true,
-            minLength: 3,
-            maxLength: 180,
+            required: { value: true, message: "La tarea es requerida" },
+            minLength: {
+              value: 3,
+              message: "La tarea debe tener al menos 3 caracteres",
+            },
+            maxLength: {
+              value: 180,
+              message: "La tarea debe tener menos de 180 caracteres",
+            },
           })}
         />
+
         <button
-          className="bg-white text-black px-3 rounded" /* onClick={addTodo} se quita porque ahora con el submit se pone*/
+          className={clsx("text-black px-3 rounded", {
+            "bg-stone-50": isSubmitted ? !isValid : false,
+            "bg-white": isSubmitted ? isValid : true,
+          })} 
+          disabled={isSubmitted ? !isValid : false}
         >
           + Agregar
         </button>
       </form>
+      {errors.todo && (
+        <p className="max-w-screen-sm w-full mx-auto p-4 text-center text-red-600 font-bold">
+          {errors.todo?.message}
+        </p>
+      )}
       <div className="max-w-screen-sm w-full mx-auto p-4">
         {todos.length === 0 && (
           <p className="bg-white/50 rounded p-4 m-4 flex flex-row justify-center">
