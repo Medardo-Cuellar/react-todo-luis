@@ -9,11 +9,13 @@ export default function RHF() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isValid, isSubmitted }, //los is son para validar el formulario son propiedades que nos da react-hook-form y son booleanos
   } = useForm();
 
   function onSubmit(data) {
     setTodos([...todos, data.todo]);
+    reset();
   }
 
   function removeTodo(indexToRemove) {
@@ -79,10 +81,7 @@ export default function RHF() {
         />
 
         <button
-          className={clsx("text-black px-3 rounded", {
-            "bg-stone-50": isSubmitted ? !isValid : false,
-            "bg-white": isSubmitted ? isValid : true,
-          })} 
+          className="text-black px-3 rounded bg-white disabled:bg-stone-400"
           disabled={isSubmitted ? !isValid : false}
         >
           + Agregar
